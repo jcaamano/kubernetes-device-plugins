@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    name: device-plugin-network-macvtap
+  name: device-plugin-network-macvtap
+spec:
+  selector:
+    matchLabels:
+      name: device-plugin-network-macvtap
+  template:
+    metadata:
+      labels:
+        name: device-plugin-network-macvtap
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: device-plugin-network-macvtap
+        image: quay.io/kubevirt/device-plugin-network-macvtap:latest
+        securityContext:
+          privileged: true
+        env:
+        - name: MASTERS
+          valueFrom:
+            configMapKeyRef:
+             name: device-plugin-network-macvtap
+             key: masters
+        volumeMounts:
+          - name: var-run
+            mountPath: /var/run
+          - name: device-plugin
+            mountPath: /var/lib/kubelet/device-plugins
+      volumes:
+        - name: var-run
+          hostPath:
+            path: /var/run
+        - name: device-plugin
+          hostPath:
+            path: /var/lib/kubelet/device-plugins
