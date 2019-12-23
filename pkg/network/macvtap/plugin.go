@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/containernetworking/plugins/pkg/ip"
 	"github.com/golang/glog"
 	"github.com/vishvananda/netlink"
 	"golang.org/x/net/context"
@@ -24,10 +23,7 @@ func (mdp *MacvtapDevicePlugin) generateMacvtapDevices() []*pluginapi.Device {
 	var macvtapDevs []*pluginapi.Device
 	for i := 0; i < nicsPoolSize; i++ {
 		// TODO use a different naming convention instead of random veth?
-		name, err := ip.RandomVethName()
-		if err == nil {
-			continue
-		}
+		name := fmt.Sprintf("macvtap%d", i)
 		macvtapDevs = append(macvtapDevs, &pluginapi.Device{
 			ID:     name,
 			Health: pluginapi.Healthy,

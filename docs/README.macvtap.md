@@ -65,5 +65,4 @@ $ ls /dev
 
 * FIXME: proper error handling and cleanup
 * FIXME: add tests
-* TODO: use predictable interface/device names instead of randomized
-* TODO: better health check over parent interfaces
+* TODO: better health check

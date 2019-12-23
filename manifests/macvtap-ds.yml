@@ -17,7 +17,7 @@ spec:
       hostPID: true
       containers:
       - name: device-plugin-network-macvtap
-        image: quay.io/kubevirt/device-plugin-network-macvtap:latest
+        image: registry:5000/kubevirt/device-plugin-network-macvtap:latest
         securityContext:
           privileged: true
         env:

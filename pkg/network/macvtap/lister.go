@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	resourceNamespace              = "macvtapridge.network.kubevirt.io"
+	resourceNamespace              = "macvtap.network.kubevirt.io"
 	MastersListEnvironmentVariable = "MASTERS"
 )
 
