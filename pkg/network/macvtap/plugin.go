@@ -52,12 +52,19 @@ func createMacvtap(name string, master string) (int, error) {
 			LinkAttrs: netlink.LinkAttrs{
 				Name:        name,
 				ParentIndex: m.Attrs().Index,
+				// we had crashes if we did not set qlen to some value
+				TxQLen:      m.Attrs().TxQLen,
 			},
+			Mode: netlink.MACVLAN_MODE_BRIDGE,
 		},
 	}
 
 	if err := netlink.LinkAdd(mv); err != nil {
 		return 0, fmt.Errorf("failed to create macvtap: %v", err)
+	}
+
+	if err := netlink.LinkSetUp(mv); err != nil {
+		return 0, fmt.Errorf("failed to set %q UP: %v", name, err)
 	}
 
 	return mv.Attrs().Index, nil
@@ -101,7 +108,7 @@ func (mdp *MacvtapDevicePlugin) Allocate(ctx context.Context, r *pluginapi.Alloc
 				// FIXME proper error handling and cleanup
 				return nil, err
 			}
-			devPath := fmt.Sprint(tapPath, index)
+			devPath := fmt.Sprintf(tapPath, index)
 			dev.HostPath = devPath
 			dev.ContainerPath = devPath
 			dev.Permissions = "rw"
